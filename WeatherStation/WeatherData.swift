@@ -10,6 +10,7 @@ import Foundation
 import CoreMotion
 import CoreLocation
 
+/// Collect weather data from the mobile device
 class WeatherData: NSObject, CLLocationManagerDelegate {
     
     var altimeter:CMAltimeter!

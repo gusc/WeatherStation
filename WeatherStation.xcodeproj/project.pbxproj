@@ -16,8 +16,8 @@
 		CD182CCF20B957EA0000609D /* libpqxx-6.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CCE20B957E90000609D /* libpqxx-6.2.dylib */; };
 		CD182CD120B95EA50000609D /* WeatherConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD182CD020B95EA50000609D /* WeatherConnection.swift */; };
 		CD182CD320B967C20000609D /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD182CD220B967C20000609D /* WeatherData.swift */; };
-		CD182CD620B978F40000609D /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CD520B978F40000609D /* SwiftSocket.framework */; };
-		CD182CD720B978F40000609D /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CD520B978F40000609D /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CD182CDA20B982CF0000609D /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CD920B982C70000609D /* SwiftSocket.framework */; };
+		CD182CDB20B982CF0000609D /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CD920B982C70000609D /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,7 +36,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CD182CD720B978F40000609D /* SwiftSocket.framework in Embed Frameworks */,
+				CD182CDB20B982CF0000609D /* SwiftSocket.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,7 +57,7 @@
 		CD182CD020B95EA50000609D /* WeatherConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherConnection.swift; sourceTree = "<group>"; };
 		CD182CD220B967C20000609D /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		CD182CD420B977AC0000609D /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
-		CD182CD520B978F40000609D /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
+		CD182CD920B982C70000609D /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftSocket.framework; path = Carthage/Build/iOS/SwiftSocket.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD182CD620B978F40000609D /* SwiftSocket.framework in Frameworks */,
+				CD182CDA20B982CF0000609D /* SwiftSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,7 +126,7 @@
 		CD182CCD20B957E90000609D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CD182CD520B978F40000609D /* SwiftSocket.framework */,
+				CD182CD920B982C70000609D /* SwiftSocket.framework */,
 				CD182CCE20B957E90000609D /* libpqxx-6.2.dylib */,
 			);
 			name = Frameworks;
