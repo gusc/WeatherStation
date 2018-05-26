@@ -12,7 +12,36 @@
 		CD182CB620B954A10000609D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD182CB420B954A10000609D /* Main.storyboard */; };
 		CD182CB820B954A20000609D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD182CB720B954A20000609D /* Assets.xcassets */; };
 		CD182CBB20B954A20000609D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD182CB920B954A20000609D /* LaunchScreen.storyboard */; };
+		CD182CC920B954DA0000609D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD182CC820B954DA0000609D /* main.cpp */; };
+		CD182CCF20B957EA0000609D /* libpqxx-6.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CCE20B957E90000609D /* libpqxx-6.2.dylib */; };
+		CD182CD120B95EA50000609D /* WeatherConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD182CD020B95EA50000609D /* WeatherConnection.swift */; };
+		CD182CD320B967C20000609D /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD182CD220B967C20000609D /* WeatherData.swift */; };
+		CD182CD620B978F40000609D /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CD520B978F40000609D /* SwiftSocket.framework */; };
+		CD182CD720B978F40000609D /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CD520B978F40000609D /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CD182CC420B954DA0000609D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		CD182CD820B978F40000609D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CD182CD720B978F40000609D /* SwiftSocket.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		CD182CAD20B954A10000609D /* WeatherStation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherStation.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,6 +51,13 @@
 		CD182CB720B954A20000609D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CD182CBA20B954A20000609D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD182CBC20B954A20000609D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CD182CC620B954DA0000609D /* WeatherServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WeatherServer; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD182CC820B954DA0000609D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		CD182CCE20B957E90000609D /* libpqxx-6.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libpqxx-6.2.dylib"; path = "../../../../../usr/local/Cellar/libpqxx/6.2.3/lib/libpqxx-6.2.dylib"; sourceTree = "<group>"; };
+		CD182CD020B95EA50000609D /* WeatherConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherConnection.swift; sourceTree = "<group>"; };
+		CD182CD220B967C20000609D /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
+		CD182CD420B977AC0000609D /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		CD182CD520B978F40000609D /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +65,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD182CD620B978F40000609D /* SwiftSocket.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD182CC320B954DA0000609D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD182CCF20B957EA0000609D /* libpqxx-6.2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,8 +83,11 @@
 		CD182CA420B954A10000609D = {
 			isa = PBXGroup;
 			children = (
+				CD182CD420B977AC0000609D /* Cartfile */,
 				CD182CAF20B954A10000609D /* WeatherStation */,
+				CD182CC720B954DA0000609D /* WeatherServer */,
 				CD182CAE20B954A10000609D /* Products */,
+				CD182CCD20B957E90000609D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -47,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				CD182CAD20B954A10000609D /* WeatherStation.app */,
+				CD182CC620B954DA0000609D /* WeatherServer */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -60,8 +109,27 @@
 				CD182CB720B954A20000609D /* Assets.xcassets */,
 				CD182CB920B954A20000609D /* LaunchScreen.storyboard */,
 				CD182CBC20B954A20000609D /* Info.plist */,
+				CD182CD020B95EA50000609D /* WeatherConnection.swift */,
+				CD182CD220B967C20000609D /* WeatherData.swift */,
 			);
 			path = WeatherStation;
+			sourceTree = "<group>";
+		};
+		CD182CC720B954DA0000609D /* WeatherServer */ = {
+			isa = PBXGroup;
+			children = (
+				CD182CC820B954DA0000609D /* main.cpp */,
+			);
+			path = WeatherServer;
+			sourceTree = "<group>";
+		};
+		CD182CCD20B957E90000609D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CD182CD520B978F40000609D /* SwiftSocket.framework */,
+				CD182CCE20B957E90000609D /* libpqxx-6.2.dylib */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,6 +142,7 @@
 				CD182CA920B954A10000609D /* Sources */,
 				CD182CAA20B954A10000609D /* Frameworks */,
 				CD182CAB20B954A10000609D /* Resources */,
+				CD182CD820B978F40000609D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -83,6 +152,23 @@
 			productName = WeatherStation;
 			productReference = CD182CAD20B954A10000609D /* WeatherStation.app */;
 			productType = "com.apple.product-type.application";
+		};
+		CD182CC520B954DA0000609D /* WeatherServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD182CCA20B954DA0000609D /* Build configuration list for PBXNativeTarget "WeatherServer" */;
+			buildPhases = (
+				CD182CC220B954DA0000609D /* Sources */,
+				CD182CC320B954DA0000609D /* Frameworks */,
+				CD182CC420B954DA0000609D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WeatherServer;
+			productName = WeatherServer;
+			productReference = CD182CC620B954DA0000609D /* WeatherServer */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -95,6 +181,14 @@
 				ORGANIZATIONNAME = "Gusts Kaksis";
 				TargetAttributes = {
 					CD182CAC20B954A10000609D = {
+						CreatedOnToolsVersion = 9.3.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+					CD182CC520B954DA0000609D = {
 						CreatedOnToolsVersion = 9.3.1;
 					};
 				};
@@ -113,6 +207,7 @@
 			projectRoot = "";
 			targets = (
 				CD182CAC20B954A10000609D /* WeatherStation */,
+				CD182CC520B954DA0000609D /* WeatherServer */,
 			);
 		};
 /* End PBXProject section */
@@ -135,8 +230,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD182CD120B95EA50000609D /* WeatherConnection.swift in Sources */,
 				CD182CB320B954A10000609D /* ViewController.swift in Sources */,
+				CD182CD320B967C20000609D /* WeatherData.swift in Sources */,
 				CD182CB120B954A10000609D /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD182CC220B954DA0000609D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD182CC920B954DA0000609D /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +387,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JVZU86833U;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = WeatherStation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -300,6 +409,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JVZU86833U;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = WeatherStation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -309,6 +422,38 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CD182CCB20B954DA0000609D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JVZU86833U;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/libpqxx/6.2.3/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CD182CCC20B954DA0000609D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JVZU86833U;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/libpqxx/6.2.3/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -329,6 +474,15 @@
 			buildConfigurations = (
 				CD182CC020B954A20000609D /* Debug */,
 				CD182CC120B954A20000609D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD182CCA20B954DA0000609D /* Build configuration list for PBXNativeTarget "WeatherServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD182CCB20B954DA0000609D /* Debug */,
+				CD182CCC20B954DA0000609D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
