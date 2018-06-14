@@ -20,6 +20,8 @@
 		CD182CDB20B982CF0000609D /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD182CD920B982C70000609D /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CD445B9720D2FD7C00783116 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = CD445B9620D2FD7C00783116 /* LICENSE */; };
 		CD445B9920D2FE1700783116 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CD445B9820D2FE1700783116 /* README.md */; };
+		CD445B9C20D3282100783116 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD445B9A20D3282100783116 /* Database.cpp */; };
+		CD445BA020D32AC900783116 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD445B9E20D32AC900783116 /* Socket.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,6 +64,11 @@
 		CD182CD920B982C70000609D /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftSocket.framework; path = Carthage/Build/iOS/SwiftSocket.framework; sourceTree = "<group>"; };
 		CD445B9620D2FD7C00783116 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CD445B9820D2FE1700783116 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		CD445B9A20D3282100783116 /* Database.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Database.cpp; sourceTree = "<group>"; };
+		CD445B9B20D3282100783116 /* Database.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
+		CD445B9D20D328AC00783116 /* DataPacket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
+		CD445B9E20D32AC900783116 /* Socket.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Socket.cpp; sourceTree = "<group>"; };
+		CD445B9F20D32AC900783116 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +132,11 @@
 			isa = PBXGroup;
 			children = (
 				CD182CC820B954DA0000609D /* main.cpp */,
+				CD445B9A20D3282100783116 /* Database.cpp */,
+				CD445B9B20D3282100783116 /* Database.h */,
+				CD445B9D20D328AC00783116 /* DataPacket.h */,
+				CD445B9E20D32AC900783116 /* Socket.cpp */,
+				CD445B9F20D32AC900783116 /* Socket.h */,
 			);
 			path = WeatherServer;
 			sourceTree = "<group>";
@@ -249,6 +261,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD445B9C20D3282100783116 /* Database.cpp in Sources */,
+				CD445BA020D32AC900783116 /* Socket.cpp in Sources */,
 				CD182CC920B954DA0000609D /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -439,6 +453,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JVZU86833U;
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/Cellar/libpqxx/6.2.3/lib,
@@ -455,6 +470,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JVZU86833U;
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/Cellar/libpqxx/6.2.3/lib,
