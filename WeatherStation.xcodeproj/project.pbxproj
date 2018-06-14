@@ -69,6 +69,7 @@
 		CD445B9D20D328AC00783116 /* DataPacket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
 		CD445B9E20D32AC900783116 /* Socket.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Socket.cpp; sourceTree = "<group>"; };
 		CD445B9F20D32AC900783116 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
+		CD445BA120D3339300783116 /* weather_server.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = weather_server.sql; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +138,7 @@
 				CD445B9D20D328AC00783116 /* DataPacket.h */,
 				CD445B9E20D32AC900783116 /* Socket.cpp */,
 				CD445B9F20D32AC900783116 /* Socket.h */,
+				CD445BA120D3339300783116 /* weather_server.sql */,
 			);
 			path = WeatherServer;
 			sourceTree = "<group>";
