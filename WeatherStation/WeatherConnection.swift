@@ -18,7 +18,7 @@ class WeatherConnection: NSObject {
         
     }
     
-    func connect(host:String, port:Int16) -> Bool {
+    func connect(host:String, port:UInt16) -> Bool {
         client = TCPClient(address: host, port: Int32(port))
         switch client.connect(timeout: 10) {
             case .success:
@@ -27,6 +27,14 @@ class WeatherConnection: NSObject {
                 NSLog("Failed to connect to server: " + error.localizedDescription)
                 return false
         }
+    }
+    
+    func disconnect() -> Bool {
+        if client != nil {
+            client.close()
+            return true
+        }
+        return false
     }
     
     func send(data:Data) -> Bool {

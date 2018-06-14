@@ -46,6 +46,47 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
         return false
     }
     
+    /// Send current data to server
+    func sendToServer(host:String, port:UInt16) {
+        let connection = WeatherConnection()
+        if connection.connect(host: host, port: port) {
+            var data:Data = Data()
+            
+            // Write datagram version and capability bits
+            var version:UInt32 = 1 << 16 // Upper 16 bits are version
+            // Capability bits:
+            // 0 - pressure
+            // 1 - temperature
+            version |= 1 // This app only supports pressure sensors
+            data.append(UnsafeBufferPointer(start: &version, count: 1))
+            
+            // Write GPS coordinates
+            var lat = Float(location.latitude)
+            var lng = Float(location.longitude)
+            var alt = altitude.floatValue
+            data.append(UnsafeBufferPointer(start: &lat, count: 1))
+            data.append(UnsafeBufferPointer(start: &lng, count: 1))
+            data.append(UnsafeBufferPointer(start: &alt, count: 1))
+            
+            // Write pressure data
+            var press = pressure.floatValue
+            data.append(UnsafeBufferPointer(start: &press, count: 1))
+            
+            // Write temperature data - not available
+            var temp:Float = 0.0
+            data.append(UnsafeBufferPointer(start: &temp, count: 1))
+            
+            // Zero-fill to 8 * 4 byte boundary
+            var zero:Float = 0.0
+            data.append(UnsafeBufferPointer(start: &zero, count: 1))
+            data.append(UnsafeBufferPointer(start: &zero, count: 1))
+            
+            // Send datagram
+            connection.send(data: data)
+            connection.disconnect()
+        }
+    }
+    
     /// User authorization has changed
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status != .authorizedAlways {
@@ -54,6 +95,8 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
         }
         
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.startUpdatingLocation()
         location = manager.location!.coordinate
     }
