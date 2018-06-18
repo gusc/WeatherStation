@@ -11,41 +11,29 @@
 
 struct DataContainer
 {
-    uint32_t containerSize;
-    uint32_t containerId; // also char[4]
+    struct {
+        uint32_t pressure : 1;
+        uint32_t temperature : 1;
+        uint32_t altitude : 1;
+        uint32_t reserved : 29;
+    } features;
+    uint32_t timestamp;
+    struct {
+        float latitude;
+        float longitude;
+    } location;
+    float pressure;
+    float temperature;
+    float altitude;
 };
 
 struct DataPacket
 {
-    uint32_t headerSize;
-    uint32_t packetVersion;
+    uint32_t headerVersion : 16;
+    uint32_t packetSize : 16;
     uint32_t timestamp;
     uint32_t numContainers;
     DataContainer cont[1]; // First of many
-};
-
-#define CONTAINER_ID_PRESSURE 0x72737370
-#define CONTAINER_ID_TEMPERATURE 0x706D6574
-#define CONTAINER_ID_LOCATION 0x2E737067
-
-struct DataPressure
-{
-    DataContainer header;
-    float pressure;
-};
-
-struct DataTemperature
-{
-    DataContainer header;
-    float temperature;
-};
-
-struct DataLocation
-{
-    DataContainer header;
-    float latitude;
-    float longitude;
-    float altitude;
 };
 
 #endif /* DataPacket_h */

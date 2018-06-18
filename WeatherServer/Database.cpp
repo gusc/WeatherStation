@@ -7,6 +7,14 @@
 //
 
 #include "Database.h"
+#include <ctime>
+
+static std::string TimestampToString(time_t timestamp)
+{
+    char buf[20];
+    strftime(buf, sizeof buf, "%FT%TZ", gmtime(&timestamp));
+    return std::string(buf);
+}
 
 Database::Database(const std::string& uri) : con(uri)
 {
@@ -21,7 +29,7 @@ bool Database::StoreData(const DataSet &data)
 {
     pqxx::work trans(con);
     
-    std::string query = "INSERT INTO weather_data (pressure, temperature, latitude, longitude, altitude) VALUES (";
+    std::string query = "INSERT INTO weather_data (timestamp, pressure, temperature, latitude, longitude, altitude) VALUES (" + TimestampToString(data.timestamp) + ", ";
     if (data.supports_pressure)
     {
         query += std::to_string(data.pressure) + ", ";

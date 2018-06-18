@@ -9,7 +9,6 @@
 #ifndef Database_h
 #define Database_h
 
-#include <stdio.h>
 #include <pqxx/pqxx>
 #include "DataPacket.h"
 
@@ -19,6 +18,7 @@ struct DataSet
     uint32_t supports_pressure : 1;
     uint32_t supports_temperature : 1;
     // implicit padding up to 1 uint32_t
+    time_t timestamp;
     float pressure;
     float temperature;
     float latitude;
