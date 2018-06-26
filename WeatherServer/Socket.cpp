@@ -54,6 +54,7 @@ void Socket::Process(std::function<bool (const DataPacket &)> &lambda)
     socklen_t cli_size = sizeof(cli_addr);
     
     DataPacket dp = {0};
+    DataPacket* dpp = &dp;
     
     std::memset(&cli_addr, 0, cli_size);
     
@@ -73,13 +74,13 @@ void Socket::Process(std::function<bool (const DataPacket &)> &lambda)
     
     if (dp.numContainers > 1)
     {
-        DataPacket* dp2 = reinterpret_cast<DataPacket*>(std::calloc(dp.packetSize / 4, 4));
-        std::memcpy(dp2, &dp, sizeof(dp));
+        dpp = reinterpret_cast<DataPacket*>(std::calloc(dp.packetSize / 4, 4));
+        std::memcpy(dpp, &dp, sizeof(dp));
         
         ssize_t leftovers = dp.packetSize - sizeof(dp);
         if (leftovers > 0)
         {
-            recSize = recv(client, &dp2->cont[1], leftovers, MSG_WAITALL);
+            recSize = recv(client, &dpp->cont[1], leftovers, MSG_WAITALL);
             if (recSize < 0)
             {
                 std::string err = "Malformed packet size: " + std::string(strerror(errno));
@@ -90,5 +91,5 @@ void Socket::Process(std::function<bool (const DataPacket &)> &lambda)
     
     close(client);
     
-    lambda(*dp2);
+    lambda(*dpp);
 }
