@@ -56,30 +56,39 @@ void Socket::Process(std::function<bool (const DataPacket &)> &lambda)
     DataPacket dp = {0};
     
     std::memset(&cli_addr, 0, cli_size);
-    if (accept(this->con, &cli_addr, &cli_size) < 0)
+    
+    int client = accept(this->con, &cli_addr, &cli_size);
+    if (client < 0)
     {
         std::string err = "Failed to establish connection: " + std::string(strerror(errno));
         throw std::runtime_error(err);
     }
     
-    ssize_t recSize = recv(this->con, &dp, sizeof(dp), MSG_WAITALL);
+    ssize_t recSize = recv(client, &dp, sizeof(dp), MSG_WAITALL);
     if (recSize < 0)
     {
         std::string err = "Not enough bytes received: " + std::string(strerror(errno));
         throw std::runtime_error(err);
     }
     
-    DataPacket* dp2 = reinterpret_cast<DataPacket*>(std::calloc(dp.packetSize / 4, 4));
-    std::memcpy(dp2, &dp, sizeof(dp));
-    
-    ssize_t leftovers = dp.packetSize - sizeof(dp);
-    
-    recSize = recv(this->con, &dp2->cont[1], leftovers, MSG_WAITALL);
-    if (recSize < 0)
+    if (dp.numContainers > 1)
     {
-        std::string err = "Malformed packet size: " + std::string(strerror(errno));
-        throw std::runtime_error(err);
+        DataPacket* dp2 = reinterpret_cast<DataPacket*>(std::calloc(dp.packetSize / 4, 4));
+        std::memcpy(dp2, &dp, sizeof(dp));
+        
+        ssize_t leftovers = dp.packetSize - sizeof(dp);
+        if (leftovers > 0)
+        {
+            recSize = recv(client, &dp2->cont[1], leftovers, MSG_WAITALL);
+            if (recSize < 0)
+            {
+                std::string err = "Malformed packet size: " + std::string(strerror(errno));
+                throw std::runtime_error(err);
+            }
+        }
     }
+    
+    close(client);
     
     lambda(*dp2);
 }

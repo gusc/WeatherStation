@@ -123,15 +123,16 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
     
     /// Write datagram header
     private func appendHeaderTo(data:inout Data) {
-        let count:UInt32 = UInt32(unsentHistory.count) + 1
+        var count:UInt32 = UInt32(unsentHistory.count) + 1
         let version:UInt32 = 1
         let size:UInt32 = 12 + (count * 28) // 12 byte header + 1 (or more) * 28 byte container
         var versionSize:UInt32 = 0
         var timestamp:UInt32 = UInt32(NSDate().timeIntervalSince1970)
-        versionSize |= ((version & 0xFFFF) << 16) // Upper 16 bits are version
-        versionSize |= (size & 0xFFFF) // Lower 16 bits are size
+        versionSize |= (version & 0xFFFF) // Upper 16 bits are version
+        versionSize |= ((size & 0xFFFF) << 16) // Lower 16 bits are size
         data.append(UnsafeBufferPointer(start: &versionSize, count: 1))
         data.append(UnsafeBufferPointer(start: &timestamp, count: 1))
+        data.append(UnsafeBufferPointer(start: &count, count: 1))
     }
     
     /// Send current data to server

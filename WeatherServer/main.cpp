@@ -22,7 +22,7 @@ void* spawn_server(void*)
     try
     {
         std::function<bool(const DataPacket& data)> callback = [=](const DataPacket& data){
-            printf("Insert new row");
+            printf("Insert new row\n");
             
             DataSet dset;
             
