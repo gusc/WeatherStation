@@ -47,7 +47,7 @@ void* spawn_server(void*)
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "ERROR: " << e.what() << std::endl;
     }
     
     return nullptr;
@@ -95,7 +95,7 @@ int main(int argc, const char * argv[])
         {
             if (pthread_create(&thread[b], nullptr, spawn_server, nullptr) < 0)
             {
-                throw "Failed to create a thread";
+                throw std::runtime_error("Failed to create a thread");
             }
         }
         
@@ -110,14 +110,14 @@ int main(int argc, const char * argv[])
                 // Re-spawn it again
                 if (pthread_create(&thread[b], nullptr, spawn_server, nullptr) < 0)
                 {
-                    throw "Failed to create a thread";
+                    throw std::runtime_error("Failed to create a thread");
                 }
             }
         }
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "ERROR: " << e.what() << std::endl;
         return 1;
     }
     

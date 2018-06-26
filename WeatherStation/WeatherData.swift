@@ -10,6 +10,7 @@ import Foundation
 import CoreMotion
 import CoreLocation
 
+/// Container of a single measurement data
 private class WeatherContainer {
     private var features:UInt32
     private var timestamp:UInt32
@@ -19,10 +20,19 @@ private class WeatherContainer {
     var temperature:Float32 = 0.0
     var altitude:Float32 = 0.0
     
-    init()
+    init(hasBarometer:Bool, hasThermometer:Bool, hasAltimeter:Bool)
     {
         timestamp = UInt32(NSDate().timeIntervalSince1970)
-        features = 0x5 // This app only supports pressure and altitude data
+        features = 0
+        if hasBarometer {
+            features |= 1
+        }
+        if hasThermometer {
+            features |= 2
+        }
+        if hasAltimeter {
+            features |= 4
+        }
     }
     
     func appendTo(data:inout Data)
@@ -35,6 +45,10 @@ private class WeatherContainer {
         data.append(UnsafeBufferPointer(start: &temperature, count: 1))
         data.append(UnsafeBufferPointer(start: &altitude, count: 1))
     }
+    
+    func isValid() -> Bool {
+        return latitude != Float32.nan && longitude != Float32.nan && altitude != Float32.nan
+    }
 }
 
 /// Collect weather data from the mobile device
@@ -42,6 +56,11 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
     
     var altimeter:CMAltimeter!
     var locationManager:CLLocationManager!
+    
+    private var hasBarometer:Bool = false
+    private var hasThermometer:Bool = false
+    private var hasAltimeter:Bool = false
+    private var hasGps:Bool = false
     
     private var pressure:NSNumber = 0
     private var altitude:NSNumber = 0
@@ -62,7 +81,8 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
         locationManager.requestAlwaysAuthorization() // To use in background
         
         if CMAltimeter.isRelativeAltitudeAvailable() {
-            NSLog("Barometer is available")
+            hasBarometer = true
+            hasAltimeter = true
             
             altimeter.startRelativeAltitudeUpdates(to: .main) { (data, err) in
                 self.pressure = (data?.pressure)!
@@ -71,11 +91,37 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
             
             return true
         }
+        else
+        {
+            NSLog("ERROR: Barometer is not available")
+        }
         
         return false
     }
     
-    // Write datagram header
+    /// User authorization has changed
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.pausesLocationUpdatesAutomatically = false
+        
+        if status != .authorizedAlways {
+            NSLog("ERROR: App needs to update location always")
+            return
+        }
+        
+        hasGps = true
+        
+        locationManager.startUpdatingLocation()
+        location = manager.location!.coordinate
+    }
+    
+    /// Location has been updated
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.location = locations[locations.count - 1].coordinate
+    }
+    
+    /// Write datagram header
     private func appendHeaderTo(data:inout Data) {
         let count:UInt32 = UInt32(unsentHistory.count) + 1
         let version:UInt32 = 1
@@ -90,20 +136,33 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
     
     /// Send current data to server
     func sendToServer(host:String, port:UInt16) {
+        if !hasGps {
+            NSLog("FAILED: No GPS, location information is mandatory")
+            return
+        }
+        
+        // Create current data content
+        let content = WeatherContainer(hasBarometer: hasBarometer, hasThermometer: hasThermometer, hasAltimeter: hasAltimeter)
+        content.latitude = Float32(location.latitude)
+        content.longitude = Float32(location.longitude)
+        content.altitude = Float32(altitude.floatValue)
+        content.pressure = Float32(pressure.floatValue)
+        
+        if !content.isValid() {
+            NSLog("WARNING: GPS not ready")
+            return
+        }
+        
         let connection = WeatherConnection()
-        if connection.connect(host: host, port: port) {
+        if connection.connect(host: host, port: port) == false {
+            // Delay sending till next time
+            self.unsentHistory.append(content)
+            NSLog("WARNING: No connection - delay sending")
+        } else {
             var data:Data = Data()
             
             // Write data pakcet header
             appendHeaderTo(data: &data)
-            
-            // Create current data content
-            let content = WeatherContainer()
-            content.latitude = Float32(location.latitude)
-            content.longitude = Float32(location.longitude)
-            content.altitude = Float32(altitude.floatValue)
-            content.pressure = Float32(pressure.floatValue)
-            content.temperature = 0.0
             
             // Write current data container
             content.appendTo(data: &data)
@@ -117,6 +176,7 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
             if connection.send(data: data) == false {
                 // Delay sending till next time
                 self.unsentHistory.append(content)
+                NSLog("WARNING: Failed to send - delay sending")
             } else {
                 // Empty unsent list as everything has been sent successfully
                 self.unsentHistory.removeAll()
@@ -125,24 +185,5 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
             // Close connection
             connection.disconnect()
         }
-    }
-    
-    /// User authorization has changed
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status != .authorizedAlways {
-            NSLog("App needs to update location always")
-            return
-        }
-        
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.pausesLocationUpdatesAutomatically = false
-        locationManager.startUpdatingLocation()
-        location = manager.location!.coordinate
-    }
-    
-    /// Location has been updated
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.location = locations[locations.count - 1].coordinate
     }
 }
