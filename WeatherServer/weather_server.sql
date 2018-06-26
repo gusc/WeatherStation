@@ -1,6 +1,6 @@
 CREATE TABLE weather_data (
     id serial NOT NULL,
-    received timestamp DEFAULT now(),
+    measure_date timestamp DEFAULT now(),
     pressure real,
     temperature real,
     latitude real NOT NULL,

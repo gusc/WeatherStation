@@ -29,7 +29,8 @@ bool Database::StoreData(const DataSet &data)
 {
     pqxx::work trans(con);
     
-    std::string query = "INSERT INTO weather_data (timestamp, pressure, temperature, latitude, longitude, altitude) VALUES (" + TimestampToString(data.timestamp) + ", ";
+    std::string query = "INSERT INTO weather_data (measure_date, pressure, temperature, latitude, longitude, altitude)"
+                        "VALUES ('" + trans.esc(TimestampToString(data.timestamp)) + "', ";
     if (data.supports_pressure)
     {
         query += std::to_string(data.pressure) + ", ";
