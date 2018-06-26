@@ -11,8 +11,10 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
-    var data: WeatherData!
+    var window:UIWindow?
+    var data:WeatherData!
+    var backgroundTask:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var timer:Timer?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -21,7 +23,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSLog("Data capture started")
         }
         
+        self.timer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { [self] _ in
+            self.startBackgroundTask()
+        }
+        
         return true
+    }
+    
+    func startBackgroundTask() {
+        NSLog("Send data")
+        
+        self.backgroundTask = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            self.endBackgroundTask()
+        })
+        
+        if self.backgroundTask == UIBackgroundTaskInvalid {
+            NSLog("ERROR: Failed to start background task")
+        }
+        
+        self.data.sendToServer(host:"192.168.0.124", port:6868)
+        
+        self.endBackgroundTask()
+    }
+    
+    func endBackgroundTask() {
+        UIApplication.shared.endBackgroundTask(backgroundTask)
+        self.backgroundTask = UIBackgroundTaskInvalid
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

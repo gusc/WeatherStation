@@ -10,8 +10,6 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var backgroundTask:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -19,20 +17,6 @@ class ViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
-    func registerBackgroundTask() {
-        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-            let delegate = UIApplication.shared.delegate as! AppDelegate
-            // TODO: Change to some server hostname
-            delegate.data.sendToServer(host:"192.168.0.101", port:6868)
-            self?.endBackgroundTask()
-        }
-        assert(backgroundTask != UIBackgroundTaskInvalid)
-    }
     
-    func endBackgroundTask() {
-        UIApplication.shared.endBackgroundTask(backgroundTask)
-        backgroundTask = UIBackgroundTaskInvalid
-    }
 }
 
