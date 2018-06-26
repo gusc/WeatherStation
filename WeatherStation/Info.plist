@@ -20,6 +20,12 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs to know your location in the background to continue sending weather updates to cloud</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs to know your location to continue sending weather updates to cloud</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs to know your location to continue sending weather updates to cloud</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
