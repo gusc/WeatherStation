@@ -10,15 +10,44 @@ import Foundation
 import CoreMotion
 import CoreLocation
 
+private class WeatherContainer {
+    private var features:UInt32
+    private var timestamp:UInt32
+    var latitude:Float32
+    var longitude:Float32
+    var pressure:Float32
+    var temperature:Float32
+    var altitude:Float32
+    
+    init()
+    {
+        timestamp = NSDate().timeIntervalSince1970
+        features = 0x5 // This app only supports pressure and altitude data
+    }
+    
+    func appendTo(data:Data)
+    {
+        data.append(UnsafeBufferPointer(start: &features, count: 1))
+        data.append(UnsafeBufferPointer(start: &timestamp, count: 1))
+        data.append(UnsafeBufferPointer(start: &latitude, count: 1))
+        data.append(UnsafeBufferPointer(start: &longitude, count: 1))
+        data.append(UnsafeBufferPointer(start: &pressure, count: 1))
+        data.append(UnsafeBufferPointer(start: &temperature, count: 1))
+        data.append(UnsafeBufferPointer(start: &altitude, count: 1))
+    }
+}
+
 /// Collect weather data from the mobile device
 class WeatherData: NSObject, CLLocationManagerDelegate {
     
     var altimeter:CMAltimeter!
-    var locationManager: CLLocationManager!
+    var locationManager:CLLocationManager!
     
     var pressure:NSNumber = 0
     var altitude:NSNumber = 0
     var location:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    
+    var unsentHistory:[WeatherContainer]
     
     /// Constructor
     override init() {
@@ -46,43 +75,55 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
         return false
     }
     
+    // Write datagram header
+    private func appendHeaderTo(data:Data) -> UInt16 {
+        let count:UInt32 = unsentHistory.count + 1
+        let version:UInt16 = 1
+        let size:UInt16 = 12 + (count) * 28 // 12 byte header + 1 (or more) * 28 byte container
+        var versionSize:UInt32 = 0
+        let timestamp:UInt32 = NSDate().timeIntervalSince1970
+        versionSize |= (version << 16) // Upper 16 bits are version
+        versionSize |= size // Lower 16 bits are size
+        data.append(UnsafeBufferPointer(start: &versionSize, count: 1))
+        data.append(UnsafeBufferPointer(start: &timestamp, count: 1))
+        return size
+    }
+    
     /// Send current data to server
     func sendToServer(host:String, port:UInt16) {
         let connection = WeatherConnection()
         if connection.connect(host: host, port: port) {
             var data:Data = Data()
             
-            // Write datagram version and capability bits
-            var version:UInt32 = 1 << 16 // Upper 16 bits are version
-            // Capability bits:
-            // 0 - pressure
-            // 1 - temperature
-            version |= 1 // This app only supports pressure sensors
-            data.append(UnsafeBufferPointer(start: &version, count: 1))
+            // Write data pakcet header
+            let size = appendHeaderTo(data: data)
             
-            // Write GPS coordinates
-            var lat = Float(location.latitude)
-            var lng = Float(location.longitude)
-            var alt = altitude.floatValue
-            data.append(UnsafeBufferPointer(start: &lat, count: 1))
-            data.append(UnsafeBufferPointer(start: &lng, count: 1))
-            data.append(UnsafeBufferPointer(start: &alt, count: 1))
+            // Create current data content
+            var content = WeatherContainer()
+            content.latitude = Float32(location.latitude)
+            content.longitude = Float32(location.longitude)
+            content.altitude = Float32(altitude.floatValue)
+            content.pressure = Float32(pressure.floatValue)
+            content.temperature = 0.0
             
-            // Write pressure data
-            var press = pressure.floatValue
-            data.append(UnsafeBufferPointer(start: &press, count: 1))
+            // Write current data container
+            content.appendTo(data: data)
             
-            // Write temperature data - not available
-            var temp:Float = 0.0
-            data.append(UnsafeBufferPointer(start: &temp, count: 1))
-            
-            // Zero-fill to 8 * 4 byte boundary
-            var zero:Float = 0.0
-            data.append(UnsafeBufferPointer(start: &zero, count: 1))
-            data.append(UnsafeBufferPointer(start: &zero, count: 1))
+            // Write other data containers that failed to send before
+            for a in self.unsentHistory {
+                a.appendTo(data)
+            }
             
             // Send datagram
-            connection.send(data: data)
+            if connection.send(data: data) == false {
+                // Delay sending till next time
+                self.unsentHistory.append(content)
+            } else {
+                // Empty unsent list as everything has been sent successfully
+                self.unsentHistory.removeAll()
+            }
+            
+            // Close connection
             connection.disconnect()
         }
     }
@@ -103,6 +144,6 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
     
     /// Location has been updated
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        location = locations[locations.count - 1].coordinate
+        self.location = locations[locations.count - 1].coordinate
     }
 }

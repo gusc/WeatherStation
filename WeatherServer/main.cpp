@@ -99,7 +99,19 @@ int main(int argc, const char * argv[])
         
         std::cout << "Server started!\n" << std::endl;
         
-        while (1){}
+        while (1)
+        {
+            for (int b = 0; b < 10; b ++)
+            {
+                // Wait for the thread to finish
+                pthread_join(thread[b], nullptr);
+                // Re-spawn it again
+                if (pthread_create(&thread[b], nullptr, spawn_server, nullptr) < 0)
+                {
+                    throw "Failed to create a thread";
+                }
+            }
+        }
     }
     catch (const std::exception &e)
     {
