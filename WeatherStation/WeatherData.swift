@@ -13,19 +13,19 @@ import CoreLocation
 private class WeatherContainer {
     private var features:UInt32
     private var timestamp:UInt32
-    var latitude:Float32
-    var longitude:Float32
-    var pressure:Float32
-    var temperature:Float32
-    var altitude:Float32
+    var latitude:Float32 = 0.0
+    var longitude:Float32 = 0.0
+    var pressure:Float32 = 0.0
+    var temperature:Float32 = 0.0
+    var altitude:Float32 = 0.0
     
     init()
     {
-        timestamp = NSDate().timeIntervalSince1970
+        timestamp = UInt32(NSDate().timeIntervalSince1970)
         features = 0x5 // This app only supports pressure and altitude data
     }
     
-    func appendTo(data:Data)
+    func appendTo(data:inout Data)
     {
         data.append(UnsafeBufferPointer(start: &features, count: 1))
         data.append(UnsafeBufferPointer(start: &timestamp, count: 1))
@@ -43,11 +43,11 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
     var altimeter:CMAltimeter!
     var locationManager:CLLocationManager!
     
-    var pressure:NSNumber = 0
-    var altitude:NSNumber = 0
-    var location:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    private var pressure:NSNumber = 0
+    private var altitude:NSNumber = 0
+    private var location:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     
-    var unsentHistory:[WeatherContainer]
+    private var unsentHistory:[WeatherContainer] = []
     
     /// Constructor
     override init() {
@@ -76,17 +76,16 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
     }
     
     // Write datagram header
-    private func appendHeaderTo(data:Data) -> UInt16 {
-        let count:UInt32 = unsentHistory.count + 1
-        let version:UInt16 = 1
-        let size:UInt16 = 12 + (count) * 28 // 12 byte header + 1 (or more) * 28 byte container
+    private func appendHeaderTo(data:inout Data) {
+        let count:UInt32 = UInt32(unsentHistory.count) + 1
+        let version:UInt32 = 1
+        let size:UInt32 = 12 + (count * 28) // 12 byte header + 1 (or more) * 28 byte container
         var versionSize:UInt32 = 0
-        let timestamp:UInt32 = NSDate().timeIntervalSince1970
-        versionSize |= (version << 16) // Upper 16 bits are version
-        versionSize |= size // Lower 16 bits are size
+        var timestamp:UInt32 = UInt32(NSDate().timeIntervalSince1970)
+        versionSize |= ((version & 0xFFFF) << 16) // Upper 16 bits are version
+        versionSize |= (size & 0xFFFF) // Lower 16 bits are size
         data.append(UnsafeBufferPointer(start: &versionSize, count: 1))
         data.append(UnsafeBufferPointer(start: &timestamp, count: 1))
-        return size
     }
     
     /// Send current data to server
@@ -96,10 +95,10 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
             var data:Data = Data()
             
             // Write data pakcet header
-            let size = appendHeaderTo(data: data)
+            appendHeaderTo(data: &data)
             
             // Create current data content
-            var content = WeatherContainer()
+            let content = WeatherContainer()
             content.latitude = Float32(location.latitude)
             content.longitude = Float32(location.longitude)
             content.altitude = Float32(altitude.floatValue)
@@ -107,11 +106,11 @@ class WeatherData: NSObject, CLLocationManagerDelegate {
             content.temperature = 0.0
             
             // Write current data container
-            content.appendTo(data: data)
+            content.appendTo(data: &data)
             
             // Write other data containers that failed to send before
             for a in self.unsentHistory {
-                a.appendTo(data)
+                a.appendTo(data: &data)
             }
             
             // Send datagram
