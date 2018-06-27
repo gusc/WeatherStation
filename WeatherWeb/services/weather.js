@@ -1,8 +1,5 @@
-// SMS Service
+// Weather Service
 
-var request = require('request');
-
-var smsTimeout = null;
 var database = null;
 var config = null;
 
