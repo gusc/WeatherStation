@@ -1,0 +1,4 @@
+{
+  "psql_url" : "postgresql://localhost:5432/weather_stations", 
+  "http_port" : 8001
+}
