@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSLog("Data capture started")
         }
         
-        self.timer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { [self] _ in
+        self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [self] _ in
             self.startBackgroundTask()
         }
         
@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSLog("ERROR: Failed to start background task")
         }
         
-        self.data.sendToServer(host:"192.168.0.124", port:6868)
+        self.data.sendToServer(host:"192.168.1.153", port:6868)
         
         self.endBackgroundTask()
     }
